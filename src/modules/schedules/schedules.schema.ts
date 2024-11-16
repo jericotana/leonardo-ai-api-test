@@ -27,8 +27,8 @@ export const scheduleQuerySchema = z
     account_id: z.coerce.number().optional(),
     agent_id: z.coerce.number().optional(),
     sort: z.string().optional(),
-    skip: z.number().optional(),
-    take: z.number().optional(),
+    skip: z.coerce.number().optional(),
+    take: z.coerce.number().optional(),
     cursor: z.string().uuid().optional()
   })
 

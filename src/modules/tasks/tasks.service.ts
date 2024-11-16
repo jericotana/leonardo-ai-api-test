@@ -10,12 +10,23 @@ type TasksWithSchedule = Prisma.TasksGetPayload<{
 export class TasksService {
   constructor(private prisma: PrismaService) {}
 
-  getTasks(where?: Prisma.TasksWhereInput): Promise<TasksWithSchedule[]> {
+  getTasks(params: {
+    skip?: number
+    take?: number
+    cursor?: Prisma.TasksWhereUniqueInput,
+    where?: Prisma.TasksWhereInput,
+    orderBy?: Prisma.TasksOrderByWithRelationInput
+  } = {}): Promise<TasksWithSchedule[]> {
+    const { skip, take, cursor, where, orderBy } = params
     return this.prisma.tasks.findMany({
+      skip,
+      take,
+      cursor,
       where,
       include: {
         schedule: true
-      }
+      },
+      orderBy
     })
   }
 

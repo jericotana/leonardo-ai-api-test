@@ -185,38 +185,4 @@ describe('SchedulesController', () => {
       expect(tasksService.createTask).toHaveBeenCalled()
     })
   })
-
-  describe('getTasksByScheduleId', () => {
-    it('should return an array of tasks', async () => {
-      const scheduleId = 'test-schedule-id'
-      const schedule: Schedule = {
-        id: scheduleId,
-        account_id: 1,
-        agent_id: 1,
-        start_time: new Date(),
-        end_time: new Date(),
-        created_at: new Date(),
-        updated_at: new Date()
-      }
-      const expected: Task[]= [{
-        id: 'test-task-id',
-        account_id: 1,
-        schedule_id: scheduleId,
-        start_time: new Date(),
-        duration: 100,
-        type: 'BREAK',
-        schedule,
-        created_at: new Date(),
-        updated_at: new Date()
-      }]
-      jest.spyOn(tasksService, 'getTasks').mockResolvedValueOnce(expected);
-
-      const result = await tasksService.getTasks({
-        schedule_id: scheduleId
-      })
-
-      expect(expected).toBe(result);
-      expect(tasksService.getTasks).toHaveBeenCalled()
-    })
-  })
 })

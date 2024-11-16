@@ -2,6 +2,13 @@ import { z } from 'zod';
 import { scheduleSchema  } from '@/modules/schedules/schedules.schema';
 import { TasksType } from '@prisma/client';
 
+export const ALLOWED_TASKS_FIELDS_FOR_SORT = [
+  "start_time",
+  "duration",
+  "created_at",
+  "updated_at"
+]
+
 export const taskSchema = z
   .object({
     id: z.string().uuid(),
@@ -17,6 +24,20 @@ export const taskSchema = z
   .required()
 
 export type Task = z.infer<typeof taskSchema>
+
+export const tasksQuerySchema = z
+  .object({
+    account_id: z.coerce.number().optional(),
+    schedule_id: z.string().uuid().optional(),
+    type: z.nativeEnum(TasksType).optional(),
+    sort: z.string().optional(),
+    skip: z.coerce.number().optional(),
+    take: z.coerce.number().optional(),
+    cursor: z.string().uuid().optional()
+  })
+
+export type TaskQuery = z.infer<typeof tasksQuerySchema>
+
 
 export const updateTaskSchema = z
   .object({

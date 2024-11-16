@@ -4,25 +4,45 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   Controller,
   ParseUUIDPipe,
   NotFoundException
 } from '@nestjs/common';
 import { ZodValidationPipe } from '@/common/pipes/zod.pipe';
 import { TasksService } from './tasks.service';
-import { 
+import {
+  ALLOWED_TASKS_FIELDS_FOR_SORT,
   Task,
+  TaskQuery,
+  tasksQuerySchema,
   updateTaskSchema,
   UpdateTaskDto,
 } from './tasks.schema';
+import { SortQuery } from '@/common/decorators/sort.decorator';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Get()
-  getTasks(): Promise<Task[]> {
-    return this.tasksService.getTasks();
+  getTasks(
+    @Query(new ZodValidationPipe(tasksQuerySchema)) query?: TaskQuery,
+    @SortQuery(ALLOWED_TASKS_FIELDS_FOR_SORT) sort?: Record<string, string>
+  ): Promise<Task[]> {
+    return this.tasksService.getTasks({
+      skip: query?.skip,
+      take: query?.take,
+      cursor: query?.cursor ? { id: query.cursor} : undefined,
+      where: {
+        account_id: query?.account_id,
+        schedule_id: query?.schedule_id,
+        type: query?.type
+      },
+      orderBy: {
+        ...sort
+      }
+    })
   }
 
   @Get(':taskId')

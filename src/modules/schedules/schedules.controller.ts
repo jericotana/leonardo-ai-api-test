@@ -44,6 +44,7 @@ export class SchedulesController {
     return this.schedulesService.getSchedules({
       skip: query?.skip,
       take: query?.take,
+      cursor: query?.cursor ? { id: query.cursor} : undefined,
       where: {
         account_id: query?.account_id,
         agent_id: query?.agent_id
@@ -51,7 +52,7 @@ export class SchedulesController {
       orderBy: {
         ...sort
       }
-    });
+    })
   }
 
   @Get(':scheduleId')
@@ -95,15 +96,6 @@ export class SchedulesController {
     return await this.tasksService.createTask({
       schedule_id: scheduleId,
       ...createTaskScheduleDto
-    })
-  }
-
-  @Get(':scheduleId/tasks')
-  async getTasksByScheduleId(
-    @Param('scheduleId', ParseUUIDPipe, SchedulesValidationPipe) scheduleId: string
-  ): Promise<Task[]> {
-    return await this.tasksService.getTasks({
-      schedule_id: scheduleId
     })
   }
 }
