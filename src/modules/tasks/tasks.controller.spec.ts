@@ -111,7 +111,7 @@ describe('TasksController', () => {
 
       const result = await tasksController.updateTask(taskId, {
         account_id: 1,
-        start_time: new Date(),
+        start_time: new Date().toISOString(),
         schedule_id: scheduleId,
         duration: 100,
         type: 'BREAK',

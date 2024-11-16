@@ -43,7 +43,7 @@ export const updateTaskSchema = z
   .object({
     account_id: z.number().optional(),
     schedule_id: z.string().uuid().optional(),
-    start_time: z.date().optional(),
+    start_time: z.string().datetime().optional(),
     duration: z.number().optional(),
     type: z.nativeEnum(TasksType).optional(),
   })

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/common/providers/prisma/prisma.service';
 import { Schedule, Prisma } from '@prisma/client';
+import { BadRequestException } from '@nestjs/common'
 
 @Injectable()
 export class SchedulesService {
@@ -51,10 +52,16 @@ export class SchedulesService {
   }
 
   async deleteSchedule(id: string): Promise<void> {
-    await this.prisma.schedule.delete({ 
-      where: {
-        id
+    try {
+      await this.prisma.schedule.delete({ 
+        where: {
+          id
+        }
+      }) 
+    } catch(error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new BadRequestException('Tasks exists for the schedule')
       }
-    }) 
+    }
   }
 }
