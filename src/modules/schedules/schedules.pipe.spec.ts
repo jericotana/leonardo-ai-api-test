@@ -24,6 +24,10 @@ describe('SchedulesValidationPipe', () => {
     schedulesPipe = new SchedulesValidationPipe(schedulesService)
   });
 
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
   describe('transform', () => {
     it('should return scheduleId when schedule exists', async () => {
       const scheduleId = 'test-schedule-id'
