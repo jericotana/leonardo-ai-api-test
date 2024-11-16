@@ -20,6 +20,7 @@ import {
   UpdateTaskDto,
 } from './tasks.schema';
 import { SortQuery } from '@/common/decorators/sort.decorator';
+import { TasksValidationPipe } from './tasks.pipe';
 
 @Controller('tasks')
 export class TasksController {
@@ -57,14 +58,14 @@ export class TasksController {
 
   @Put(':taskId')
   async updateTask(
-    @Param('taskId', ParseUUIDPipe) taskId: string,
+    @Param('taskId', ParseUUIDPipe, TasksValidationPipe) taskId: string,
     @Body(new ZodValidationPipe(updateTaskSchema)) task: UpdateTaskDto
   ): Promise<Task> {
     return await this.tasksService.updateTask(taskId, task)
   }
 
   @Delete(':taskId')
-  async deleteTask(@Param('taskId', ParseUUIDPipe) taskId: string): Promise<void> {
+  async deleteTask(@Param('taskId', ParseUUIDPipe, TasksValidationPipe) taskId: string): Promise<void> {
     await this.tasksService.deleteTask(taskId)
   }
 }

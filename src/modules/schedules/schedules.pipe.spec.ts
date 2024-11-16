@@ -42,9 +42,9 @@ describe('SchedulesValidationPipe', () => {
       }
       jest.spyOn(schedulesService, 'getSchedule').mockResolvedValueOnce(schedule);
 
-      const result = schedulesPipe.transform(scheduleId)
+      const result = await schedulesPipe.transform(scheduleId)
 
-      expect(result).toBe(result);
+      expect(result).toBe(scheduleId);
     });
 
     it('should throw a NotFoundException when schedule does not exists', async () => {
