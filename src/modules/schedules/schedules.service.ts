@@ -6,9 +6,20 @@ import { Schedule, Prisma } from '@prisma/client';
 export class SchedulesService {
   constructor(private prisma: PrismaService) {}
 
-  getSchedules(where?: Prisma.ScheduleWhereInput): Promise<Schedule[]> {
+  getSchedules(params: {
+    skip?: number
+    take?: number
+    cursor?: Prisma.ScheduleWhereUniqueInput,
+    where?: Prisma.ScheduleWhereInput,
+    orderBy?: Prisma.ScheduleOrderByWithAggregationInput
+  } = {}): Promise<Schedule[]> {
+    const { skip, take, cursor, where, orderBy } = params
     return this.prisma.schedule.findMany({
-      where
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy
     })
   }
 

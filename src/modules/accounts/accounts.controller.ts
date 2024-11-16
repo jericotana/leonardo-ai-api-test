@@ -20,7 +20,9 @@ export class AccountsController {
   @Get(':accountId/schedules')
   getAcccountSchedules(@Param('accountId', ParseIntPipe) accountId: number): Promise<Schedule[]> {
     return this.schedulesService.getSchedules({
-      account_id: accountId
+      where: {
+        account_id: accountId
+      }
     });
   }
 

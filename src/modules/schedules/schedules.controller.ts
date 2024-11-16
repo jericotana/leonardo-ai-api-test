@@ -5,6 +5,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   Controller,
   ParseUUIDPipe,
   NotFoundException
@@ -13,7 +14,10 @@ import { SchedulesService } from './schedules.service';
 import { TasksService } from '@/modules/tasks/tasks.service';
 import { ZodValidationPipe } from '@/common/pipes/zod.pipe';
 import {
+  ALLOWED_SCHEDULES_FIELDS_FOR_SORT,
   Schedule,
+  scheduleQuerySchema,
+  ScheduleQuery,
   createScheduleSchema,
   CreateScheduleDto,
   updateScheduleSchema,
@@ -23,6 +27,7 @@ import {
 } from './schedules.schema';
 import { Task } from '../tasks/tasks.schema';
 import { SchedulesValidationPipe } from './schedules.pipe';
+import { SortQuery } from '@/common/decorators/sort.decorator';
 
 @Controller('schedules')
 export class SchedulesController {
@@ -32,8 +37,21 @@ export class SchedulesController {
   ) {}
 
   @Get()
-  getSchedules(): Promise<Schedule[]> {
-    return this.schedulesService.getSchedules();
+  getSchedules(
+    @Query(new ZodValidationPipe(scheduleQuerySchema)) query?: ScheduleQuery,
+    @SortQuery(ALLOWED_SCHEDULES_FIELDS_FOR_SORT) sort?: Record<string, string>
+  ): Promise<Schedule[]> {
+    return this.schedulesService.getSchedules({
+      skip: query?.skip,
+      take: query?.take,
+      where: {
+        account_id: query?.account_id,
+        agent_id: query?.agent_id
+      },
+      orderBy: {
+        ...sort
+      }
+    });
   }
 
   @Get(':scheduleId')

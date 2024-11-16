@@ -15,7 +15,9 @@ export class AgentsController {
   @Get(':agentId/schedules')
   getAgentSchedules(@Param('agentId', ParseIntPipe) agentId: number): Promise<Schedule[]> {
     return this.schedulesService.getSchedules({
-      agent_id: agentId
+      where: {
+        agent_id: agentId
+      }
     });
   }
 }
